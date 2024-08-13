@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>貴重な意見または問題報告</title>
+    <style>
+        #reportText {
+            width: 80%;
+            height: 150px;
+            font-size: 16px;
+        }
+        #submitButton {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function submitReport() {
+            const apiUrl = "http://18.183.175.8:5000/submit_report/";
+            const userID = localStorage.getItem("userID") || "anonymous";
+            const reportText = document.getElementById("reportText").value;
+
+            if (!reportText) {
+                alert("報告内容を入力してください。");
+                return;
+            }
+
+            const data = {
+                userID: userID,
+                report: reportText
+            };
+
+            fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("報告が送信されました。");
+                } else {
+                    alert("サーバーエラーが発生しました。");
+                }
+            })
+            .catch(error => {
+                alert("送信に失敗しました: " + error.message);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>貴重な意見または問題報告</h1>
+    <textarea id="reportText" placeholder="アドバイスや問題の詳細をここに入力してください..."></textarea><br>
+    <button id="submitButton" onclick="submitReport()">送信</button>
+</body>
+</html>
